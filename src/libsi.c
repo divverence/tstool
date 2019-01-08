@@ -442,7 +442,7 @@ int set_rcs_tables_by_pmts(TABLE** tbl_pmts, int pmt_nr, RCS_TABLES* rcs_tbls){
     return 1;
 }
 
-TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, u32 file_size, int is_verbose){
+TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_size, int is_verbose){
 
 
     TSR_RESULT* result;
@@ -675,7 +675,7 @@ int delete_tsr_result(TSR_RESULT* result){
 
 /* return / 256 : offset of the first packet from beginning of data chunk,
    return % 256 : packet size, either 188 or 204, if 0, error. */
-u16 get_packet_offset_and_size(u8 *data, int data_size){
+u16 get_packet_offset_and_size(u8 *data, size_t data_size){
 
     u8  sync_byte = 0x47;
     u8  offset, packet_size = 0;

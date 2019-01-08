@@ -84,9 +84,9 @@ typedef struct{
     /*** basic data about the ts */
 	char*          file_path;
     u8*            file_data;      /* point to the beginning of the file */
-    u32            file_size;      /* file size to processed */
+    size_t         file_size;      /* file size to processed */
     u8*            ts_data;        /* point to the beginning of the TS */
-    u32            ts_size;    
+    size_t         ts_size;    
     u8             is_otv_header;  /* is there otv header */
     OTV_HEADER     otv_header;     /* the otv header */
     u8             packet_size;    /* 188 or 204 */
@@ -145,7 +145,7 @@ int set_pmt_list_by_pat_sect(SECTION* pat_sect, PMT_LIST* pmt_list);
 int set_ait_list_by_pmts(TABLE** tbl_pmts, int pmt_nr, AIT_LIST* ait_list); /* added(bruin, 2003.01.13) */
 int set_rcs_tables_by_pmts(TABLE** tbl_pmts, int pmt_nr, RCS_TABLES* rcs_tbls); /* added(bruin, 2003.02.17) */
     
-TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, u32 file_size, int is_verbose);
+TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, u64 file_size, int is_verbose);
 int delete_tsr_result(TSR_RESULT* result);
 
 u16 get_packet_offset_and_size(u8 *data, int data_size);
