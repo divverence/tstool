@@ -201,7 +201,7 @@ int main(int argc, char* argv[]){
 	if(s_is_204to188){
 
 		FILE* fpo;
-		int   i;
+		u64   i;
 
 		if(s_result->packet_size == 188){
 			fprintf(stderr, "204 to 188: packet size already 188 bytes, do nothing.\n");
@@ -236,7 +236,7 @@ int main(int argc, char* argv[]){
 	if(s_is_188to204){
 
 		FILE*         fpo;
-		int           i;
+		u64           i;
 		unsigned char stuff[204 - 188];
 
 		if(s_result->packet_size == 204){
@@ -278,7 +278,8 @@ int main(int argc, char* argv[]){
 		FILE*          fpo;
 		PID_PAIR_NODE* node = NULL;
 		PID_PAIR_LIST  list = {0, NULL};
-		int            i, match;
+		u64            i;
+		int            match;
 		unsigned short old_pid = 0, new_pid = 0;
 		unsigned char  packet[204];
 		unsigned char* p;
@@ -353,7 +354,8 @@ int main(int argc, char* argv[]){
 		FILE*          fpo;
 		PID_PAIR_NODE* node = NULL; /* only use the old_pid field */
 		PID_PAIR_LIST  list = {0, NULL}; 
-		int            i, match;
+		u64            i;
+		int            match;
 		unsigned short pid;
 		unsigned char* p;
 
@@ -425,7 +427,8 @@ int main(int argc, char* argv[]){
 		FILE*          fpo;
 		PID_PAIR_NODE* node = NULL; /* only use the old_pid field */
 		PID_PAIR_LIST  list = {0, NULL}; 
-		int            i, match;
+		u64            i;
+		int            match;
 		unsigned short pid;
 		unsigned char* p;
 

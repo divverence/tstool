@@ -181,7 +181,7 @@ static void s_parse_mhp_desc_private_data_specifier(u8* p, TNODE* root);
      of the same pid; the result pid list is sorted by pid in increasing order 
  */
 PID_LIST* build_pid_list(u8* ts, u32 packet_nr, u8 packet_size){
-    u32       i;
+    u64       i;
     u16       pid;
     u8*       p;
     PID_LIST* list;
