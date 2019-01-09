@@ -53,6 +53,7 @@ typedef struct{
 	PID_PAIR_NODE* head;
 }PID_PAIR_LIST;
 
+//#define INMEM
 #define MEM_STEP  1000000
 
 static void process_args(int argc, char* argv[]);
@@ -85,8 +86,11 @@ static struct stat s_input_stat; /* stat of input file */
 static int s_input_fd = - 1;     /* descriptor of input file */
 static u8* s_p_input_file = 0;   /* point to begining of input file memory */
 static TSR_RESULT* s_result = 0; /* analysis result */
-#if (0)
-	int            alloc_size;
+
+#ifdef INMEM
+	size_t            alloc_size, read_size = 0;
+#else
+# define MMAP
 #endif
 
 static struct option const s_long_options[] = {
@@ -141,15 +145,13 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-#if (1)
+#ifdef MMAP
 	/* mmap the whole file */
 	if((s_p_input_file = (u8*)mmap(0, s_input_stat.st_size, PROT_READ, MAP_SHARED, s_input_fd, 0)) == MAP_FAILED){
 		fprintf(stderr, "mmap file %s failed, errno=%d, abort.\n", s_input_file, errno); 
 		cleanup_and_exit(1);
 	}
-#endif
-
-#if(0)
+#else
 	/* allocate memory to store the file content */
 	alloc_size = s_input_stat.st_size;
 	s_p_input_file = (u8*)malloc(alloc_size);
@@ -178,9 +180,15 @@ int main(int argc, char* argv[]){
 	/* read the file into memory */ 
 	fprintf(stdout, "reading file into memory...");
 	fflush(stdout);
-	if(read(s_input_fd, s_p_input_file, alloc_size) != alloc_size){
-		fprintf(stderr, "reading file error, errno = %d, abort.\n", errno);
-		cleanup_and_exit(1);
+	while (read_size < alloc_size){
+		ssize_t read_now = read(s_input_fd, s_p_input_file + read_size, alloc_size - read_size);
+		if (!( read_now > 0)){
+            fprintf(stderr, "reading file error, errno = %d, abort. Read %ld, total %ld of %ld\n", errno, read_now, read_size, alloc_size);
+		    cleanup_and_exit(1);
+		}
+		read_size += read_now;
+		fprintf(stdout, "read %ld, total read %ld, target %ld\n", read_now, read_size, alloc_size);
+	    fflush(stdout);
 	}
 	fprintf(stdout, "done\n");
 	fflush(stdout);
@@ -833,12 +841,14 @@ static void cleanup_and_exit(int exit_code){
 
 	if(s_result)
 		delete_tsr_result(s_result);
-#if (0)
+#ifdef INMEM
 	if(s_p_input_file)
 		free(s_p_input_file);
 #endif
+#ifdef MMAP
 	if(s_p_input_file)
 		munmap(s_p_input_file, s_input_stat.st_size);
+#endif
 	if(s_input_fd != - 1)
 		close(s_input_fd);
 	exit(exit_code);
