@@ -442,7 +442,7 @@ int set_rcs_tables_by_pmts(TABLE** tbl_pmts, int pmt_nr, RCS_TABLES* rcs_tbls){
     return 1;
 }
 
-TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_size, int is_verbose){
+TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_size, int is_verbose, int quick){
 
 
     TSR_RESULT* result;
@@ -502,6 +502,10 @@ TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_s
 		fprintf(stdout, "checking packet size...\n\tpacket size is %d\n\ttotally %d packets%s\n", result->packet_size, result->packet_nr, (offset_and_size / 256)? "\n\tone broken packet at head discarded" : "");
 		fflush(stdout);
 	}
+
+    if (quick) {
+        return result;
+    }
 
     /* 1.3. pid list */
 	if(s_is_verbose){

@@ -145,7 +145,7 @@ int set_pmt_list_by_pat_sect(SECTION* pat_sect, PMT_LIST* pmt_list);
 int set_ait_list_by_pmts(TABLE** tbl_pmts, int pmt_nr, AIT_LIST* ait_list); /* added(bruin, 2003.01.13) */
 int set_rcs_tables_by_pmts(TABLE** tbl_pmts, int pmt_nr, RCS_TABLES* rcs_tbls); /* added(bruin, 2003.02.17) */
     
-TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_size, int is_verbose);
+TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_size, int is_verbose, int quick);
 int delete_tsr_result(TSR_RESULT* result);
 
 u16 get_packet_offset_and_size(u8 *data, size_t data_size);

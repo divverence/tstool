@@ -194,15 +194,17 @@ int main(int argc, char* argv[]){
 	fflush(stdout);
 #endif
 
-    s_result = build_tsr_result(s_input_file, s_p_input_file, s_input_stat.st_size, s_is_verbose);
+    s_result = build_tsr_result(s_input_file, s_p_input_file, s_input_stat.st_size, s_is_verbose, s_is_delete_pid);
 
 	if(!s_result){
 		fprintf(stderr, "build_tsr_result() failed, abort.\n"); 
 		cleanup_and_exit(1);
 	}
 
-	summarize_result(stdout, s_result);
-	fprintf(stdout, "for details, view the html format result (-s option).\n\n");
+	if (s_is_delete_pid == 0) {
+	    summarize_result(stdout, s_result);
+	    fprintf(stdout, "for details, view the html format result (-s option).\n\n");
+	}
 
 	/*** 204 to 188: save to output file, then exit */
 
