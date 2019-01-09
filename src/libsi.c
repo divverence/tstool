@@ -715,7 +715,8 @@ u16 get_packet_offset_and_size(u8 *data, size_t data_size){
 }
 
 PACKET_HEADER* get_packet_by_index(u8* p_ts, int index, int packet_size){
-    return (PACKET_HEADER*)(p_ts + index * packet_size);
+    signed long long longIndex = index;
+    return (PACKET_HEADER*)(p_ts + longIndex * packet_size);
 }
 
 /*
@@ -1443,7 +1444,7 @@ static void s_add_packets(TSR_RESULT* result, TNODE* root, int max_packet){
     PACKET_HEADER  *ph;
     TNODE          *node, *n2;
     char           txt[TXT_BUF_SIZE + 1];
-    int            i;
+    u64            i;
 
     if(!result || !root)
         return;
