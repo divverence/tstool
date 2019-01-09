@@ -85,8 +85,11 @@ static struct stat s_input_stat; /* stat of input file */
 static int s_input_fd = - 1;     /* descriptor of input file */
 static u8* s_p_input_file = 0;   /* point to begining of input file memory */
 static TSR_RESULT* s_result = 0; /* analysis result */
-#if (1)
+#define INMEM
+#ifdef INMEM
 	size_t            alloc_size, read_size = 0;
+#else
+# define MMAP
 #endif
 
 static struct option const s_long_options[] = {
@@ -141,15 +144,13 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-#if (0)
+#ifdef MMAP
 	/* mmap the whole file */
 	if((s_p_input_file = (u8*)mmap(0, s_input_stat.st_size, PROT_READ, MAP_SHARED, s_input_fd, 0)) == MAP_FAILED){
 		fprintf(stderr, "mmap file %s failed, errno=%d, abort.\n", s_input_file, errno); 
 		cleanup_and_exit(1);
 	}
-#endif
-
-#if(1)
+#else
 	/* allocate memory to store the file content */
 	alloc_size = s_input_stat.st_size;
 	s_p_input_file = (u8*)malloc(alloc_size);
@@ -839,11 +840,11 @@ static void cleanup_and_exit(int exit_code){
 
 	if(s_result)
 		delete_tsr_result(s_result);
-#if (1)
+#ifdef INMEM
 	if(s_p_input_file)
 		free(s_p_input_file);
 #endif
-#if (0)
+#ifdef MMAP
 	if(s_p_input_file)
 		munmap(s_p_input_file, s_input_stat.st_size);
 #endif
