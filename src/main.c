@@ -387,11 +387,6 @@ int main(int argc, char* argv[]){
 			cleanup_and_exit(1); 
 		}
 
-		if((fpo = fopen(s_output_file, "wb")) == NULL){
-			fprintf(stderr, "delete pid(s): can't open output file %s for writing, errno=%d, abort.\n", s_output_file, errno);
-			cleanup_and_exit(1);
-		}
-
 		match = 0;
 		for(node = list.head; match == 0 && node != NULL; node = node->next){
 			for (pid_item = s_result->pid_list->head; pid_item != NULL; pid_item = pid_item->next){
@@ -405,6 +400,11 @@ int main(int argc, char* argv[]){
 		if(match == 0){
 			fprintf(stderr, "delete pid(s): none of the PIDs to delete found in the first 1%% of the file, quitting\n");
 			cleanup_and_exit(0); 
+		}
+
+		if((fpo = fopen(s_output_file, "wb")) == NULL){
+			fprintf(stderr, "delete pid(s): can't open output file %s for writing, errno=%d, abort.\n", s_output_file, errno);
+			cleanup_and_exit(1);
 		}
 
 		for(i = 0; i < s_result->packet_nr; i ++){
