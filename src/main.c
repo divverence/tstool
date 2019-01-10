@@ -555,7 +555,7 @@ int main(int argc, char* argv[]){
 		}
 		save_as_html(s_result);
 		/* change back to original cwd */
-		chdir(s_cwd);
+		if(chdir(s_cwd));
 	}
 
 	cleanup_and_exit(0);

@@ -2344,7 +2344,7 @@ int save_as_html(TSR_RESULT* result){
     s_output_tree(fp, result->root, result);
 
     /* init the tree */
-    fprintf(fp, "tree_init(N%08x);\n", (u32)(result->root));
+    fprintf(fp, "tree_init(N%p);\n", (result->root));
     
     fclose(fp);
 
@@ -2374,7 +2374,7 @@ void s_output_tree(FILE* fp, TNODE* node, TSR_RESULT* result){
     }
     *p = '\0';
 
-    fprintf(fp, "N%08x=new Node(\"%08x\", \"%s\", %d, \"\");\n", (u32)node, (u32)node, txt, node->type);
+    fprintf(fp, "N%p=new Node(\"%p\", \"%s\", %d, \"\");\n", node, node, txt, node->type);
 
 	if(node->type == NODE_TYPE_PACKET)
 		s_output_packet(result, node);
@@ -2384,7 +2384,7 @@ void s_output_tree(FILE* fp, TNODE* node, TSR_RESULT* result){
     if(NULL != (kid = node->kid)){
         while(kid){
             s_output_tree(fp, kid, result);
-            fprintf(fp, "N%08x.add_kid(N%08x);\n", (u32)node, (u32)kid);
+            fprintf(fp, "N%p.add_kid(N%p);\n", node, kid);
             kid = kid->sib;
         }
     }
@@ -2400,14 +2400,14 @@ void s_output_packet(TSR_RESULT* result, TNODE* node){
 	int               nBytePerLine = 8, nRows, len, n, i, j;
 	u8*               p;
 
-	sprintf(filename, "packets/P%08x.html", (u32)node);
+	sprintf(filename, "packets/P%p.html", node);
 	fp = fopen(filename, "wt");
 
 	fprintf(fp, "<html><head><style>BODY {background-color: white; font-family: courier new; font-size: 10pt;}</style></head><body><pre>");
 
 	/* packet header info */
 	pHeader = (PACKET_HEADER*)(result->ts_data + node->tag * result->packet_size);
-	fprintf(fp, "TS packet %d header(first 4 bytes):\n\n"
+	fprintf(fp, "TS packet %lld header(first 4 bytes):\n\n"
 				 "sync byte(8)                    : 0x%02x\n"
 				 "transport error indicator(1)    : 0x%01x\n"
 				 "payload unit start indicator(1) : 0x%01x\n"
@@ -2483,7 +2483,7 @@ void s_output_section(TSR_RESULT* result, TNODE* node){
 
 	pSect = (SECTION*)node->tag;
 
-	sprintf(filename, "sections/S%08x.html", (u32)node);
+	sprintf(filename, "sections/S%p.html", node);
 	fp = fopen(filename, "wt");
 
 	fprintf(fp, "<html><head><style>BODY {background-color: white; font-family: courier new; font-size: 10pt;}</style></head><body><pre>");
