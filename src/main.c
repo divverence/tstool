@@ -201,10 +201,8 @@ int main(int argc, char* argv[]){
 		cleanup_and_exit(1);
 	}
 
-	if (s_is_delete_pid == 0) {
-	    summarize_result(stdout, s_result);
-	    fprintf(stdout, "for details, view the html format result (-s option).\n\n");
-	}
+	summarize_result(stdout, s_result);
+	fprintf(stdout, "for details, view the html format result (-s option).\n\n");
 
 	/*** 204 to 188: save to output file, then exit */
 

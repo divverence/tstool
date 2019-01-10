@@ -504,7 +504,8 @@ TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_s
 	}
 
     if (quick) {
-        return result;
+        //return result;
+        result->packet_nr = result->packet_nr / 100;
     }
 
     /* 1.3. pid list */
@@ -627,6 +628,7 @@ TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_s
 		fflush(stdout);
 	}
     
+    result->packet_nr = (result->ts_size - offset_and_size / 256) / result->packet_size;
     return result;    
 }
 
