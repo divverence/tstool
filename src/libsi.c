@@ -1420,7 +1420,7 @@ static void s_add_pids(TSR_RESULT* result, TNODE* root, int max_packet){
 			j ++){ 
           
             n3 = tnode_new(NODE_TYPE_PACKET);
-			ph = (PACKET_HEADER*)(result->ts_data + pid_node->index[j] * result->packet_size);
+			ph = (PACKET_HEADER*)(result->ts_data + ((u64)pid_node->index[j]) * result->packet_size);
 			snprintf(txt, TXT_BUF_SIZE, "%-7d: 0x%02x, 0x%01x, 0x%01x, 0x%01x ,0x%04x ,0x%01x, 0x%01x, 0x%01x", 
 										 pid_node->index[j],
 										 packet_sync_byte(ph),

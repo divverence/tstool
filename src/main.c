@@ -156,7 +156,7 @@ int main(int argc, char* argv[]){
 	alloc_size = s_input_stat.st_size;
 	s_p_input_file = (u8*)malloc(alloc_size);
 	if(s_p_input_file == NULL){
-		fprintf(stderr, "no enough memory for the whole file (size=%d), try the biggist possible...\n", alloc_size);
+		fprintf(stderr, "no enough memory for the whole file (size=%ld), try the biggist possible...\n", alloc_size);
 		fflush(stderr);
 		/* try memory sizes 1M lesser each time, until success */ 
 		for(alloc_size -= MEM_STEP; alloc_size > 0; alloc_size -= MEM_STEP){
@@ -178,7 +178,7 @@ int main(int argc, char* argv[]){
 	}
 
 	/* read the file into memory */ 
-	fprintf(stdout, "reading file into memory...");
+	fprintf(stdout, "reading file into memory...\n");
 	fflush(stdout);
 	while (read_size < alloc_size){
 		ssize_t read_now = read(s_input_fd, s_p_input_file + read_size, alloc_size - read_size);
