@@ -361,6 +361,7 @@ int main(int argc, char* argv[]){
 		
 		FILE*          fpo;
 		PID_PAIR_NODE* node = NULL; /* only use the old_pid field */
+		PID_NODE*      pid_item = NULL;
 		PID_PAIR_LIST  list = {0, NULL}; 
 		u64            i;
 		int            match;
@@ -389,6 +390,21 @@ int main(int argc, char* argv[]){
 		if((fpo = fopen(s_output_file, "wb")) == NULL){
 			fprintf(stderr, "delete pid(s): can't open output file %s for writing, errno=%d, abort.\n", s_output_file, errno);
 			cleanup_and_exit(1);
+		}
+
+		match = 0;
+		for(node = list.head; match == 0 && node != NULL; node = node->next){
+			for (pid_item = s_result->pid_list->head; pid_item != NULL; pid_item = pid_item->next){
+				if(node->old_pid == pid_item->pid){
+					match = 1;
+					break;
+				}
+			}
+		}
+
+		if(match == 0){
+			fprintf(stderr, "delete pid(s): none of the PIDs to delete found in the first 1%% of the file, quitting\n");
+			cleanup_and_exit(0); 
 		}
 
 		for(i = 0; i < s_result->packet_nr; i ++){
