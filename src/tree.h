@@ -36,7 +36,7 @@ typedef struct _TNODE{
 	struct _TNODE*   kid;   /* first child; null if leaf */
 	
 	node_type_t      type;
-	u32              tag;   /* for NODE_TYPE_PACKET, it's the packet index;
+	u64              tag;   /* for NODE_TYPE_PACKET, it's the packet index;
 	                           for NODE_TYPE_SECTION, it's the pointer to the SECTION */  
 	u8*              txt;   /* null terminated string */
 }TNODE;

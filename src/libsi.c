@@ -582,7 +582,7 @@ TSR_RESULT* build_tsr_result(const char* file_path, u8* file_data, size_t file_s
 
     /* 2.0. root */
     result->root = tnode_new(NODE_TYPE_TS_FILE);
-    snprintf(txt, TXT_BUF_SIZE, "%s [size: %d; packet_size: %d%s", file_path, result->file_size, result->packet_size, result->is_otv_header? "; OTV header]":"]");
+    snprintf(txt, TXT_BUF_SIZE, "%s [size: %ld; packet_size: %d%s", file_path, result->file_size, result->packet_size, result->is_otv_header? "; OTV header]":"]");
     result->root->txt = strdup(txt);
 
     /* 2.1. otv hinfo */
@@ -767,15 +767,15 @@ void summarize_result(FILE* fp, TSR_RESULT* result){
 	fprintf(fp, "\nfile basic info\n");
 	fprintf(fp, "------------------\n");
 	fprintf(fp, "  file path: %s\n", result->file_path);
-	fprintf(fp, "  file size: %d\n", result->file_size);
+	fprintf(fp, "  file size: %ld\n", result->file_size);
 	if(result->is_otv_header){
-		fprintf(fp, "  opentv header exists, size: %d\n", 
+		fprintf(fp, "  opentv header exists, size: %ld\n", 
 				result->ts_data - result->file_data);
-		fprintf(fp, "  ts data size: %d\n", result->ts_size);
+		fprintf(fp, "  ts data size: %ld\n", result->ts_size);
 	}
 	else{
 		if(result->ts_data != result->file_data){
-			fprintf(fp, "  broken packet found at head, size: %d\n", 
+			fprintf(fp, "  broken packet found at head, size: %ld\n", 
 					result->ts_data - result->file_data);
 		}
 	}
@@ -1218,7 +1218,7 @@ static void s_add_table(TABLE* tbl, TNODE* root){
         sect_root = tnode_new(NODE_TYPE_SECTION);
         snprintf(txt, TXT_BUF_SIZE, "SECTION: %d", tbl->sections[i].index);
         sect_root->txt = strdup(txt);
-        sect_root->tag = (u32)(&(tbl->sections[i]));
+        sect_root->tag = (u64)(&(tbl->sections[i]));
         tnode_attach(tbl_root, sect_root);
         
         switch(tbl->tid){
@@ -1294,7 +1294,7 @@ static void s_add_tables(TABLE** tbl, TNODE* root, PID_LIST* pid_list, void* tbl
                 sect_root = tnode_new(NODE_TYPE_SECTION);
                 snprintf(txt, TXT_BUF_SIZE, "SECTION: %d", tbl[i]->sections[j].index);
                 sect_root->txt = strdup(txt);
-                sect_root->tag = (u32)(&(tbl[i]->sections[j]));
+                sect_root->tag = (u64)(&(tbl[i]->sections[j]));
                 tnode_attach(tbl_root, sect_root);
 
                 s_parse_sect_pmt(sect_root, tbl[i], j, pid_list);
@@ -1327,7 +1327,7 @@ static void s_add_tables(TABLE** tbl, TNODE* root, PID_LIST* pid_list, void* tbl
                 sect_root = tnode_new(NODE_TYPE_SECTION);
                 snprintf(txt, TXT_BUF_SIZE, "SECTION: %d", tbl[i]->sections[j].index);
                 sect_root->txt = strdup(txt);
-                sect_root->tag = (u32)(&(tbl[i]->sections[j]));
+                sect_root->tag = (u64)(&(tbl[i]->sections[j]));
                 tnode_attach(tbl_root, sect_root);
 
                 s_parse_sect_ait(sect_root, tbl[i], j, pid_list);
@@ -1448,7 +1448,7 @@ static void s_add_packets(TSR_RESULT* result, TNODE* root, int max_packet){
     PACKET_HEADER  *ph;
     TNODE          *node, *n2;
     char           txt[TXT_BUF_SIZE + 1];
-    u64            i;
+    ssize_t        i;
 
     if(!result || !root)
         return;
@@ -1468,7 +1468,7 @@ static void s_add_packets(TSR_RESULT* result, TNODE* root, int max_packet){
 	for(i = 0; i < max_packet && i < (int)(result->packet_nr); i ++){  
 		ph = (PACKET_HEADER*)(result->ts_data + i * result->packet_size);
         n2 = tnode_new(NODE_TYPE_PACKET);
-		snprintf(txt, TXT_BUF_SIZE, "%-4d: 0x%02x, 0x%01x, 0x%01x, 0x%01x ,0x%04x ,0x%01x, 0x%01x, 0x%01x",
+		snprintf(txt, TXT_BUF_SIZE, "%-4ld: 0x%02x, 0x%01x, 0x%01x, 0x%01x ,0x%04x ,0x%01x, 0x%01x, 0x%01x",
 									 i,
 									 packet_sync_byte(ph),
 									 packet_transport_error_indicator(ph),
